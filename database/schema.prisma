@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../database/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  status      Boolean  @default(false)
+
+  tags TaskTag[]
+
+  @@unique([createdAt, id], name: "createdAt_id")
+}
+
+model TaskTag {
+  id   String @id @default(cuid())
+  text String @unique
+
+  tasks Task[]
+}

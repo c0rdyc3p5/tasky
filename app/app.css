@@ -1,15 +1,275 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+* {
+    font-family: Lexend, sans-serif;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+    @apply bg-gray-900;
+    @apply text-gray-200;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+
+header {
+    @apply bg-gray-950;
+    @apply shadow-xl;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+
+    .top {
+        @apply p-4;
+        @apply flex;
+        @apply justify-between;
+        @apply items-center;
+        border-bottom: 1px solid;
+        @apply border-gray-800;
+
+        > h1 {
+            @apply text-3xl;
+        }
+    }
+
+    .bottom {
+        @apply p-2;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        > div {
+            display: flex;
+            gap: 8px;
+        }
+    }
+}
+
+button.btn {
+    padding: 12px 16px;
+    @apply rounded-sm;
+    border: 1px solid;
+    @apply border-blue-700;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+
+    &.primary {
+        @apply bg-blue-700;
+
+        &:hover {
+            @apply bg-blue-800;
+            @apply border-blue-800;
+        }
+    }
+
+    &.secondary {
+        @apply text-blue-600;
+
+        &:hover {
+            @apply bg-blue-600;
+            @apply text-gray-200;
+        }
+    }
+}
+
+main {
+    margin-top: 180px;
+
+    .new-task-modal-container {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        z-index: 1;
+        backdrop-filter: blur(4px);
+        display: grid;
+        opacity: 0;
+        pointer-events: none;
+        transition: .2s ease-in-out;
+
+        &[data-open='true'] {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .new-task-modal {
+            place-self: center;
+            @apply bg-gray-800;
+            @apply rounded-md;
+
+            .post-task {
+                .form-header {
+                    border-bottom: 1px solid;
+                    @apply border-gray-600;
+                    @apply p-4;
+                    display: flex;
+                    justify-content: space-between;
+
+                    > button {
+                        cursor: pointer;
+                    }
+                }
+
+                .form-body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    @apply p-4;
+
+                    input, textarea {
+                        @apply bg-gray-600;
+                        @apply p-2;
+                        resize: none;
+                        outline: unset;
+                        @apply rounded-sm;
+                    }
+
+                    .tags-container {
+                        display: flex;
+                        gap: 8px;
+                    }
+                }
+            }
+        }
+    }
+
+    .task-grid {
+        @apply p-4;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(50ch, 1fr));
+
+        .card {
+            @apply bg-gray-700;
+            border: 1px solid;
+            @apply border-gray-700;
+            display: flex;
+            flex-direction: column;
+
+            > .card-header {
+                @apply p-4;
+                @apply bg-gray-900;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                > .title-actions {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    > h6 {
+                        @apply text-xl;
+                    }
+
+                    > .actions {
+                        display: flex;
+                        gap: 8px;
+                        align-items: center;
+                        user-select: none;
+
+                        > .update {
+                            @apply bg-amber-800;
+                            padding: 4px 8px;
+                            @apply rounded-md;
+                            transition: .1s ease-in-out;
+                            position: relative;
+                            display: grid;
+                            cursor: pointer;
+
+                            > .done {
+                                position: absolute;
+                                place-self: center;
+                                opacity: 0;
+                            }
+
+                            &[data-done='true'] {
+                                @apply bg-green-800;
+
+                                > .done {
+                                    opacity: 1;
+                                }
+
+                                > .in-progress {
+                                    opacity: 0;
+                                }
+                            }
+                        }
+
+                        .delete {
+                            cursor: pointer;
+                            @apply bg-red-800;
+                            padding: 4px 8px;
+                            @apply rounded-md;
+                        }
+                    }
+                }
+
+                > .tags-container {
+                    display: flex;
+                    gap: 8px;
+
+                    > .tag {
+                        @apply text-sm;
+                        padding: 8px 12px;
+                        border: 1px solid;
+                        @apply border-gray-700;
+                        @apply rounded-lg;
+                    }
+                }
+
+                .error {
+                    @apply text-xs;
+                    @apply text-red-600;
+                }
+            }
+
+            > .card-body {
+                @apply p-4;
+                text-wrap: pretty;
+            }
+
+            > .card-footer {
+                @apply p-2;
+                @apply text-sm;
+                @apply text-right;
+                margin-top: auto;
+
+                > span {
+                    position: relative;
+                    text-decoration: underline 1px dotted;
+                    cursor: help;
+                    @apply decoration-gray-300;
+
+                    &::before {
+                        content: attr(data-date);
+                        position: absolute;
+                        text-decoration: unset;
+                        text-wrap: nowrap;
+                        top: -32px;
+                        translate: -25% 0;
+                        @apply bg-gray-800;
+                        padding: 8px 12px;
+                        @apply rounded-md;
+                        border: 1px solid;
+                        @apply border-gray-700;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: .2s ease-in-out;
+                    }
+
+                    &:hover::before {
+                        translate: -25% -8px;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
 }
