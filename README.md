@@ -69,7 +69,7 @@ tasky/
 ├── app/            — routes, composants, logique métier
 ├── database/       — schéma et migrations
 ├── public/         — assets statiques
-├── seedDb.ts       — script de seeding (exécuté avec Bun)
+├── seedDb.ts       — script de seeding
 └── vite.config.ts  — configuration Vite
 ```
 
